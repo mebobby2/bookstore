@@ -19,9 +19,10 @@ defmodule Bookstore.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {BookStore.App, []},
+      mod: {Bookstore.App, []},
       env: [
         pg: [
+          user: 'postgres',
           database: 'bookstore',
           host: '127.0.0.1',
           port: 5432,
