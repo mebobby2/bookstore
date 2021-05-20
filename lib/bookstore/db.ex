@@ -12,8 +12,8 @@ defmodule Bookstore.DB do
   end
 
   def add_book(isbn, title, author, owned, avail) do
-    bin_title = :erlang.iolist_to_binary(title)
-    bin_author = :erlang.iolist_to_binary(author)
+    bin_title = IO.chardata_to_string(title)
+    bin_author = IO.chardata_to_string(author)
 
     case run_query(:add_book, [isbn, bin_title, bin_author, owned, avail]) do
       {{:insert, 0, 1}, []} -> :ok
@@ -38,7 +38,7 @@ defmodule Bookstore.DB do
     handle_select(
       run_query(
         :find_by_author,
-        [:erlang.iolist_to_binary(['%', author, '%'])]
+        [IO.chardata_to_string(['%', author, '%'])]
       )
     )
   end
@@ -51,7 +51,7 @@ defmodule Bookstore.DB do
     handle_select(
       run_query(
         :find_by_title,
-        [:erlang.iolist_to_binary(['%', title, '%'])]
+        [IO.chardata_to_string(['%', title, '%'])]
       )
     )
   end
