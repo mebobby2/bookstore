@@ -34,6 +34,8 @@ defmodule Bookstore.DB do
     handle_single_update(run_query(:return_copy, [isbn]))
   end
 
+  def find_book_by_author(""), do: {:ok, []}
+  def find_book_by_author([]), do: {:ok, []}
   def find_book_by_author(author) do
     handle_select(
       run_query(
