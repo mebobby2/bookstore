@@ -35,7 +35,7 @@ WHERE isbn = $1
 -- :return_copy
 UPDATE books
 SET available = available + 1
-WHERE isbn = $1;
+WHERE isbn = $1 AND available < owned;
 
 -- Find books
 -- :find_by_author
