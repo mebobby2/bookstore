@@ -23,6 +23,30 @@ defmodule BookstoreTest do
     end
   end
 
+  property "parallel stateful operations", [:verbose] do
+    forall cmds <- parallel_commands(__MODULE__) do
+      {:ok, apps} = Application.ensure_all_started(:bookstore)
+      Bookstore.DB.setup()
+      {history, state, result} = run_parallel_commands(__MODULE__, cmds)
+      Bookstore.DB.teardown()
+      for app <- apps, do: Application.stop(app)
+
+      (result == :ok)
+      |> aggregate(command_names(cmds))
+      |> when_fail(
+        IO.puts("""
+        =======
+        Failing command sequence
+        #{inspect(cmds)}
+        At state: #{inspect(state)}
+        =======
+        Result: #{inspect(result)}
+        History: #{inspect(history)}
+        """)
+      )
+    end
+  end
+
   def title(s) do
     elements(for {_, title, _, _, _} <- Map.values(s), do: partial(title))
   end
